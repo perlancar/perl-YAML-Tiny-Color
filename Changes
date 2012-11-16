@@ -1,5 +1,10 @@
 Revision history for YAML-Tiny-Color
 
+0.02    2012-11-16 (SHARYANTO)
+
+        - Tweak colors a bit (null becomes BOLD).
+
+
 0.01    2012-11-16 (SHARYANTO)
 
         First release. Based on YAML::Tiny 1.51.

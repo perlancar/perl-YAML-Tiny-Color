@@ -1,4 +1,4 @@
-package YAML::Tiny;
+package YAML::Tiny::Color;
 
 use strict;
 
@@ -15,14 +15,14 @@ BEGIN {
 	require 5.004;
 	require Exporter;
 	require Carp;
-	$YAML::Tiny::VERSION   = '1.51';
-	# $YAML::Tiny::VERSION   = eval $YAML::Tiny::VERSION;
-	@YAML::Tiny::ISA       = qw{ Exporter  };
-	@YAML::Tiny::EXPORT    = qw{ Load Dump };
-	@YAML::Tiny::EXPORT_OK = qw{ LoadFile DumpFile freeze thaw };
+	$YAML::Tiny::Color::VERSION   = '1.51';
+	# $YAML::Tiny::Color::VERSION   = eval $YAML::Tiny::Color::VERSION;
+	@YAML::Tiny::Color::ISA       = qw{ Exporter  };
+	@YAML::Tiny::Color::EXPORT    = qw{ Load Dump };
+	@YAML::Tiny::Color::EXPORT_OK = qw{ LoadFile DumpFile freeze thaw };
 
 	# Error storage
-	$YAML::Tiny::errstr    = '';
+	$YAML::Tiny::Color::errstr    = '';
 }
 
 # The character class of all characters we need to escape
@@ -60,7 +60,7 @@ my %QUOTE = map { $_ => 1 } qw{
 #####################################################################
 # Implementation
 
-# Create an empty YAML::Tiny object
+# Create an empty YAML::Tiny::Color object
 sub new {
 	my $class = shift;
 	bless [ @_ ], $class;
@@ -164,7 +164,7 @@ sub read_string {
 				$self->_read_hash( $document, [ length($1) ], \@lines );
 
 			} else {
-				die \"YAML::Tiny failed to classify the line '$lines[0]'";
+				die \"YAML::Tiny::Color failed to classify the line '$lines[0]'";
 			}
 		}
 	};
@@ -212,7 +212,7 @@ sub _read_scalar {
 
 	# Special cases
 	if ( $string =~ /^[\'\"!&]/ ) {
-		die \"YAML::Tiny does not support a feature in line '$string'";
+		die \"YAML::Tiny::Color does not support a feature in line '$string'";
 	}
 	return {} if $string =~ /^{}(?:\s+\#.*)?\z/;
 	return [] if $string =~ /^\[\](?:\s+\#.*)?\z/;
@@ -224,20 +224,20 @@ sub _read_scalar {
 			or
 			$string =~ /:(?:\s|$)/
 		) {
-			die \"YAML::Tiny found illegal characters in plain scalar: '$string'";
+			die \"YAML::Tiny::Color found illegal characters in plain scalar: '$string'";
 		}
 		$string =~ s/\s+#.*\z//;
 		return $string;
 	}
 
 	# Error
-	die \"YAML::Tiny failed to find multi-line scalar content" unless @$lines;
+	die \"YAML::Tiny::Color failed to find multi-line scalar content" unless @$lines;
 
 	# Check the indent depth
 	$lines->[0]   =~ /^(\s*)/;
 	$indent->[-1] = length("$1");
 	if ( defined $indent->[-2] and $indent->[-1] <= $indent->[-2] ) {
-		die \"YAML::Tiny found bad indenting in line '$lines->[0]'";
+		die \"YAML::Tiny::Color found bad indenting in line '$lines->[0]'";
 	}
 
 	# Pull the lines
@@ -271,7 +271,7 @@ sub _read_array {
 		if ( length($1) < $indent->[-1] ) {
 			return 1;
 		} elsif ( length($1) > $indent->[-1] ) {
-			die \"YAML::Tiny found bad indenting in line '$lines->[0]'";
+			die \"YAML::Tiny::Color found bad indenting in line '$lines->[0]'";
 		}
 
 		if ( $lines->[0] =~ /^(\s*\-\s+)[^\'\"]\S*\s*:(?:\s+|$)/ ) {
@@ -308,7 +308,7 @@ sub _read_array {
 				$self->_read_hash( $array->[-1], [ @$indent, length("$1") ], $lines );
 
 			} else {
-				die \"YAML::Tiny failed to classify line '$lines->[0]'";
+				die \"YAML::Tiny::Color failed to classify line '$lines->[0]'";
 			}
 
 		} elsif ( defined $indent->[-2] and $indent->[-1] == $indent->[-2] ) {
@@ -322,7 +322,7 @@ sub _read_array {
 			return 1;
 
 		} else {
-			die \"YAML::Tiny failed to classify line '$lines->[0]'";
+			die \"YAML::Tiny::Color failed to classify line '$lines->[0]'";
 		}
 	}
 
@@ -347,15 +347,15 @@ sub _read_hash {
 		if ( length($1) < $indent->[-1] ) {
 			return 1;
 		} elsif ( length($1) > $indent->[-1] ) {
-			die \"YAML::Tiny found bad indenting in line '$lines->[0]'";
+			die \"YAML::Tiny::Color found bad indenting in line '$lines->[0]'";
 		}
 
 		# Get the key
 		unless ( $lines->[0] =~ s/^\s*([^\'\" ][^\n]*?)\s*:(\s+(?:\#.*)?|$)// ) {
 			if ( $lines->[0] =~ /^\s*[?\'\"]/ ) {
-				die \"YAML::Tiny does not support a feature in line '$lines->[0]'";
+				die \"YAML::Tiny::Color does not support a feature in line '$lines->[0]'";
 			}
-			die \"YAML::Tiny failed to classify line '$lines->[0]'";
+			die \"YAML::Tiny::Color failed to classify line '$lines->[0]'";
 		}
 		my $key = $1;
 
@@ -467,7 +467,7 @@ sub _write_scalar {
 sub _write_array {
 	my ($self, $array, $indent, $seen) = @_;
 	if ( $seen->{refaddr($array)}++ ) {
-		die "YAML::Tiny does not support circular references";
+		die "YAML::Tiny::Color does not support circular references";
 	}
 	my @lines  = ();
 	foreach my $el ( @$array ) {
@@ -496,7 +496,7 @@ sub _write_array {
 			}
 
 		} else {
-			die "YAML::Tiny does not support $type references";
+			die "YAML::Tiny::Color does not support $type references";
 		}
 	}
 
@@ -506,7 +506,7 @@ sub _write_array {
 sub _write_hash {
 	my ($self, $hash, $indent, $seen) = @_;
 	if ( $seen->{refaddr($hash)}++ ) {
-		die "YAML::Tiny does not support circular references";
+		die "YAML::Tiny::Color does not support circular references";
 	}
 	my @lines  = ();
 	foreach my $name ( sort keys %$hash ) {
@@ -536,7 +536,7 @@ sub _write_hash {
 			}
 
 		} else {
-			die "YAML::Tiny does not support $type references";
+			die "YAML::Tiny::Color does not support $type references";
 		}
 	}
 
@@ -545,13 +545,13 @@ sub _write_hash {
 
 # Set error
 sub _error {
-	$YAML::Tiny::errstr = $_[1];
+	$YAML::Tiny::Color::errstr = $_[1];
 	undef;
 }
 
 # Retrieve error
 sub errstr {
-	$YAML::Tiny::errstr;
+	$YAML::Tiny::Color::errstr;
 }
 
 
@@ -562,11 +562,11 @@ sub errstr {
 # YAML Compatibility
 
 sub Dump {
-	YAML::Tiny->new(@_)->write_string;
+	YAML::Tiny::Color->new(@_)->write_string;
 }
 
 sub Load {
-	my $self = YAML::Tiny->read_string(@_);
+	my $self = YAML::Tiny::Color->read_string(@_);
 	unless ( $self ) {
 		Carp::croak("Failed to load YAML document from string");
 	}
@@ -585,18 +585,18 @@ BEGIN {
 
 sub DumpFile {
 	my $file = shift;
-	YAML::Tiny->new(@_)->write($file);
+	YAML::Tiny::Color->new(@_)->write($file);
 }
 
 sub LoadFile {
-	my $self = YAML::Tiny->read($_[0]);
+	my $self = YAML::Tiny::Color->read($_[0]);
 	unless ( $self ) {
 		Carp::croak("Failed to load YAML document from '" . ($_[0] || '') . "'");
 	}
 	if ( wantarray ) {
 		return @$self;
 	} else {
-		# Return only the last document to match YAML.pm, 
+		# Return only the last document to match YAML.pm,
 		return $self->[-1];
 	}
 }
@@ -636,14 +636,12 @@ END_PERL
 }
 
 1;
+# ABSTRACT: Dump YAML Read/Write YAML files with as little code as possible
+
 
 __END__
 
 =pod
-
-=head1 NAME
-
-YAML::Tiny - Read/Write YAML files with as little code as possible
 
 =head1 PREAMBLE
 
@@ -654,7 +652,7 @@ XML.
 
 The original pure-Perl implementation L<YAML> costs just over 4 megabytes
 of memory to load. Just like with Windows .ini files (3 meg to load) and
-CSS (3.5 meg to load) the situation is just asking for a B<YAML::Tiny>
+CSS (3.5 meg to load) the situation is just asking for a B<YAML::Tiny::Color>
 module, an incomplete but correct and usable subset of the functionality,
 in as little code as possible.
 
@@ -670,7 +668,7 @@ of the features for the more common usese of YAML.
 
     #############################################
     # In your file
-    
+
     ---
     rootproperty: blah
     section:
@@ -678,39 +676,42 @@ of the features for the more common usese of YAML.
       three: four
       Foo: Bar
       empty: ~
-    
-    
-    
+
+
+
     #############################################
     # In your program
-    
-    use YAML::Tiny;
-    
+
+    use YAML::Tiny::Color;
+
     # Create a YAML file
-    my $yaml = YAML::Tiny->new;
-    
+    my $yaml = YAML::Tiny::Color->new;
+
     # Open the config
-    $yaml = YAML::Tiny->read( 'file.yml' );
-    
+    $yaml = YAML::Tiny::Color->read( 'file.yml' );
+
     # Reading properties
     my $root = $yaml->[0]->{rootproperty};
     my $one  = $yaml->[0]->{section}->{one};
     my $Foo  = $yaml->[0]->{section}->{Foo};
-    
+
     # Changing data
     $yaml->[0]->{newsection} = { this => 'that' }; # Add a section
     $yaml->[0]->{section}->{Foo} = 'Not Bar!';     # Change a value
     delete $yaml->[0]->{section};                  # Delete a value
-    
+
     # Add an entire document
     $yaml->[1] = [ 'foo', 'bar', 'baz' ];
-    
+
     # Save the file
     $yaml->write( 'file.conf' );
 
 =head1 DESCRIPTION
 
-B<YAML::Tiny> is a perl class for reading and writing YAML-style files,
+B<YAML::Tiny::Color> is quick hack off L<YAML::Tiny> 1.51 to add color dumping.
+The rest is YAML::Tiny's documentation.
+
+B<YAML::Tiny::Color> is a perl class for reading and writing YAML-style files,
 written with as little code as possible, reducing load time and memory
 overhead.
 
@@ -725,7 +726,7 @@ I said B<human-readable> and not B<geek-readable>. The sort of files that
 your average manager or secretary should be able to look at and make
 sense of.
 
-L<YAML::Tiny> does not generate comments, it won't necesarily preserve the
+L<YAML::Tiny::Color> does not generate comments, it won't necesarily preserve the
 order of your hashes, and it will normalise if reading in and writing out
 again.
 
@@ -743,7 +744,7 @@ If you need something with more power move up to L<YAML> (4 megabytes of
 memory overhead) or L<YAML::Syck> (275k, but requires libsyck and a C
 compiler).
 
-To restate, L<YAML::Tiny> does B<not> preserve your comments, whitespace,
+To restate, L<YAML::Tiny::Color> does B<not> preserve your comments, whitespace,
 or the order of your YAML data. But it should round-trip from Perl
 structure to file and back again just fine.
 
@@ -921,8 +922,8 @@ To provide the ability to support empty sequences
 and mappings, support for the constructs [] (empty sequence) and {}
 (empty mapping) are required.
 
-For example, 
-  
+For example,
+
   %YAML 1.1
   # A document consisting of only an empty mapping
   --- {}
@@ -1055,17 +1056,17 @@ specification are not required to retain the distinctiveness of 3 vs "3".
 
 =head2 new
 
-The constructor C<new> creates and returns an empty C<YAML::Tiny> object.
+The constructor C<new> creates and returns an empty C<YAML::Tiny::Color> object.
 
 =head2 read $filename
 
 The C<read> constructor reads a YAML file from a file name,
-and returns a new C<YAML::Tiny> object containing the parsed content.
+and returns a new C<YAML::Tiny::Color> object containing the parsed content.
 
 Returns the object on success, or C<undef> on error.
 
-When C<read> fails, C<YAML::Tiny> sets an error message internally
-you can recover via C<YAML::Tiny-E<gt>errstr>. Although in B<some>
+When C<read> fails, C<YAML::Tiny::Color> sets an error message internally
+you can recover via C<YAML::Tiny::Color-E<gt>errstr>. Although in B<some>
 cases a failed C<read> will also set the operating system error
 variable C<$!>, not all errors do and you should not rely on using
 the C<$!> variable.
@@ -1073,7 +1074,7 @@ the C<$!> variable.
 =head2 read_string $string;
 
 The C<read> constructor reads a YAML file from a file name,
-and returns a new C<YAML::Tiny> object containing the parsed content.
+and returns a new C<YAML::Tiny::Color> object containing the parsed content.
 
 Returns the object on success, or C<undef> on error.
 
@@ -1091,7 +1092,7 @@ Generates the file content for the object and returns it as a string.
 =head2 errstr
 
 When an error occurs, you can retrieve the error message either from the
-C<$YAML::Tiny::errstr> variable, or using the C<errstr()> method.
+C<$YAML::Tiny::Color::errstr> variable, or using the C<errstr()> method.
 
 =head1 FUNCTIONS
 
@@ -1140,7 +1141,7 @@ Writes the YAML stream to a file instead of just returning a string.
 
 Reads the YAML stream from a file instead of a string.
 
-=head1 SUPPORT
+=head1 YAML::TINY SUPPORT
 
 Bugs should be reported via the CPAN bug tracker at
 
@@ -1153,7 +1154,7 @@ For other issues, or commercial enhancement or support, please contact
 
 =end html
 
-=head1 AUTHOR
+=head1 YAML::TINY AUTHOR
 
 Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 
@@ -1162,7 +1163,7 @@ Adam Kennedy E<lt>adamk@cpan.orgE<gt>
 L<YAML>, L<YAML::Syck>, L<Config::Tiny>, L<CSS::Tiny>,
 L<http://use.perl.org/~Alias/journal/29427>, L<http://ali.as/>
 
-=head1 COPYRIGHT
+=head1 YAML::TINY COPYRIGHT
 
 Copyright 2006 - 2012 Adam Kennedy.
 

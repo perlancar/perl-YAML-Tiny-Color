@@ -12,6 +12,8 @@ require Exporter;
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(Dump);
 
+# VERSION
+
 our $LineNumber = 0;
 
 # The character class of all characters we need to escape
@@ -250,6 +252,8 @@ sub Dump {
 
 1;
 # ABSTRACT: Dump YAML with color
+
+=for Pod::Coverage ^(new)$
 
 =head1 SYNOPSIS
 

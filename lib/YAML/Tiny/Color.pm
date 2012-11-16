@@ -113,7 +113,6 @@ sub _write_string {
 }
 
 sub _write_scalar {
-    say "_write_scalar: ", join ", ", @_;
     my $string = $_[1];
     my $is_hkey = $_[3];
 
@@ -202,7 +201,7 @@ sub _write_hash {
     my @lines  = ();
     foreach my $name ( sort keys %$hash ) {
         my $el   = $hash->{$name};
-        my $line = ('  ' x $indent) . "$name:";
+        my $line = ('  ' x $indent) . $self->_write_scalar($name, 0, 1) . ":";
         my $type = ref $el;
         if ( ! $type ) {
             $line .= ' ' . $self->_write_scalar( $el, $indent + 1 );

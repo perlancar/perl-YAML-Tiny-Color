@@ -282,11 +282,19 @@ sequences. To change the colors, see C<%theme> in source code.
 
 Whether to include line numbers in dumps.
 
+
 =head1 FUNCTIONS
 
 =head2 Dump
 
 Exported by default. Dump data as YAML. Die on errors.
+
+
+=head1 FAQ
+
+=head2 What about loading?
+
+Use other modules like L<YAML::Tiny>, L<YAML::Syck>, L<YAML::XS>.
 
 
 =head1 ACKNOWLEDGEMENTS

@@ -5,7 +5,8 @@ use strict;
 use warnings;
 
 use Carp;
-use Scalar::Util qw(looks_like_number refaddr);
+use Scalar::Util qw(refaddr);
+use Scalar::Util::LooksLikeNumber qw(looks_like_number);
 use Term::ANSIColor qw(:constants);
 
 require Exporter;

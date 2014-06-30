@@ -1,5 +1,12 @@
 Revision history for YAML-Tiny-Color
 
+0.04    2014-06-30 (SHARYANTO)
+
+        - Workaround for Scalar::Util 1.39 change to looks_like_number()
+          (booleanize the result). Use (temporary?) replacement
+          Scalar::Util::LooksLikeNumber.
+
+
 0.03    2012-11-22 (SHARYANTO)
 
         - dep: Specify minimum version for Term::ANSIColor (BRIGHT_GREEN etc not
